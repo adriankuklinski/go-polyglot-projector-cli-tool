@@ -15,6 +15,13 @@ type Projector struct {
 	data   *Data
 }
 
+func CreateProjector(config *Config, data *Data) *Projector {
+	return &Projector{
+		config: config,
+		data:   data,
+	}
+}
+
 func (p *Projector) GetValue(key string) (string, bool) {
 	curr := p.config.Pwd
 	prev := ""
@@ -83,7 +90,7 @@ func (p *Projector) RemoveValue(key string) {
 func defaultProjector(config *Config) *Projector {
 	return &Projector{
 		config: config,
-		data: Data{
+		data: &Data{
 			Projector: map[string]map[string]string{},
 		},
 	}
