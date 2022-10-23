@@ -52,3 +52,29 @@ func TestGetValue(t *testing.T) {
 
 	test(t, proj, "foo", "bar3")
 }
+
+func TestSetValue(t *testing.T) {
+	data := getData()
+	proj := getProjector("/foo/bar", data)
+
+	test(t, proj, "foo", "bar3")
+	proj.SetValue("foo", "bar4")
+	test(t, proj, "foo", "bar4")
+	proj.SetValue("baz", "super_baz")
+	test(t, proj, "baz", "super_baz")
+
+	proj = getProjector("/", data)
+	test(t, proj, "baz", "zap")
+}
+
+func TestRemoveValue(t *testing.T) {
+	data := getData()
+	proj := getProjector("/foo/bar", data)
+	test(t, proj, "foo", "bar3")
+
+	proj.RemoveValue("foo")
+	test(t, proj, "foo", "bar2")
+
+	proj.RemoveValue("baz")
+	test(t, proj, "baz", "zap")
+}
