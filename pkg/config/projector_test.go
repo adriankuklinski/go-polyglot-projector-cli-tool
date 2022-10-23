@@ -2,10 +2,12 @@ package config_test
 
 import (
 	"testing"
+
+	"github.com/adriankuklinski/go-polyglot-projector-cli-tool/pkg/config"
 )
 
-func getData() *projector.Data {
-	return &projector.Data{
+func getData() *config.Data {
+	return &config.Data{
 		Projector: map[string]map[string]string{
 			"/": {
 				"foo": "bar1",
@@ -21,31 +23,32 @@ func getData() *projector.Data {
 	}
 }
 
-func getProjector(pwd string, data *projector.Data) *projector.Projector {
-	return projector.CreateProjector(
-		&projector.Config{
+func getProjector(pwd string, data *config.Data) *config.Projector {
+	return config.CreateProjector(
+		&config.Config{
 			Args:      []string{},
-			Operation: projector.Print,
+			Operation: config.Print,
 			Pwd:       pwd,
 			Config:    "Hello, Squirrel",
-		}, data)
+		},
+		data,
+	)
 }
 
-func test(t *testing.T, proj *projector.Projector, key, value string) {
+func test(t *testing.T, proj *config.Projector, key, value string) {
 	v, ok := proj.GetValue(key)
 	if !ok {
-		t.Error("expected to find value \"%v\"")
+		t.Errorf("expected to find value \"%+v\"", value)
 	}
 
 	if value != v {
-		t.Error("expected to find %v but recieved %v", value, v)
+		t.Errorf("expected to find %v but recieved %+v", value, v)
 	}
 }
 
 func TestGetValue(t *testing.T) {
 	data := getData()
-	proj := getProjector("foo/bar", data)
-	value, ok := proj.GetValue("foo")
+	proj := getProjector("/foo/bar", data)
 
 	test(t, proj, "foo", "bar3")
 }
